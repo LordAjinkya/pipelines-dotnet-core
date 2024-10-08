@@ -1,0 +1,28 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: '6.6.1'
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.csproj' # Change this to match the .csproj file
+
+- task: VSBuild@1
+  inputs:
+    solution: '**/*.csproj' # Build the .csproj file instead of .sln
+    msbuildArgs: '/p:Configuration=Release'
+    platform: '$(BuildPlatform)' 
+    configuration: '$(BuildConfiguration)'
+
+- script: echo Hello, world............net!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build
